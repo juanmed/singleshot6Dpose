@@ -328,3 +328,12 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+# Local Folders
+backup/
+LINEMODE/
+VOCdevkit/
+multi_obj_pose_estimation/
+*.pyc
+cfg/darknet19_448.conv.23
+	
