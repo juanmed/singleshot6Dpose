@@ -1,0 +1,7 @@
+train  = Gate_Static_2/train.txt
+valid  = Gate_Static_2/test.txt
+backup = backup/Gate_Static_2
+mesh = Gate_Static_2/gate.ply
+tr_range = Gate_Static_2/training_range.txt
+name = gate
+diam = 4.66

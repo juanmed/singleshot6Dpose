@@ -93,7 +93,6 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 	# Using confidence threshold, eliminate low-confidence predictions
 	# and get only boxes over the confidence threshold
 	all_boxes = get_region_boxes(output, conf_thresh, num_classes) 
-	t3 = time.time()
 
 	boxes = all_boxes[0]
 
@@ -113,6 +112,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 	corners2D_pr = np.array(np.reshape(box_pr[:18], [9, 2]), dtype='float32') 
 	corners2D_pr[:, 0] = corners2D_pr[:, 0] * ori_size[0]  # Width
 	corners2D_pr[:, 1] = corners2D_pr[:, 1] * ori_size[1]  # Height
+	t3 = time.time()
 
 	# **********************************************#
 	#	GET OBJECT POSE ESTIMATION					#
@@ -163,7 +163,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 	p8 = corners2D_pr[8]
 	center = corners2D_pr[0] 
 
-	# Draw cube around detected object
+	# Draw cube lines around detected object
 	# draw front face
 	cv2.line(img,(p1[0],p1[1]),(p2[0],p2[1]), (0,255,0),1)
 	cv2.line(img,(p2[0],p2[1]),(p4[0],p4[1]), (0,255,0),1)
@@ -187,7 +187,9 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 	# Show the image and wait key press
 	cv2.imshow(wname, img)
 	cv2.waitKey()
-
+	
+	print("Rotation: {}".format(R_pr))
+	print("Translation: {}".format(t_pr))
 	print(" Predict time: {}".format(t2 - t1))
 	print(" 2D Points extraction time: {}".format(t3- t2))
 	print(" Pose calculation time: {}:".format(t4 - t3))

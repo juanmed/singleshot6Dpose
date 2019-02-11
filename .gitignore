@@ -336,4 +336,7 @@ VOCdevkit/
 multi_obj_pose_estimation/
 *.pyc
 cfg/darknet19_448.conv.23
+Gate_Static_2/
+Static_Gate/
+
 	
