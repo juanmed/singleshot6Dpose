@@ -165,24 +165,25 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 
 	# Draw cube lines around detected object
 	# draw front face
-	cv2.line(img,(p1[0],p1[1]),(p2[0],p2[1]), (0,255,0),1)
-	cv2.line(img,(p2[0],p2[1]),(p4[0],p4[1]), (0,255,0),1)
-	cv2.line(img,(p4[0],p4[1]),(p3[0],p3[1]), (0,255,0),1)
-	cv2.line(img,(p3[0],p3[1]),(p1[0],p1[1]), (0,255,0),1)
+	line_point = 3
+	cv2.line(img,(p1[0],p1[1]),(p2[0],p2[1]), (0,255,0),line_point)
+	cv2.line(img,(p2[0],p2[1]),(p4[0],p4[1]), (0,255,0),line_point)
+	cv2.line(img,(p4[0],p4[1]),(p3[0],p3[1]), (0,255,0),line_point)
+	cv2.line(img,(p3[0],p3[1]),(p1[0],p1[1]), (0,255,0),line_point)
 	
 	# draw back face
-	cv2.line(img,(p5[0],p5[1]),(p6[0],p6[1]), (0,255,0),1)
-	cv2.line(img,(p7[0],p7[1]),(p8[0],p8[1]), (0,255,0),1)
-	cv2.line(img,(p6[0],p6[1]),(p8[0],p8[1]), (0,255,0),1)
-	cv2.line(img,(p5[0],p5[1]),(p7[0],p7[1]), (0,255,0),1)
+	cv2.line(img,(p5[0],p5[1]),(p6[0],p6[1]), (0,255,0),line_point)
+	cv2.line(img,(p7[0],p7[1]),(p8[0],p8[1]), (0,255,0),line_point)
+	cv2.line(img,(p6[0],p6[1]),(p8[0],p8[1]), (0,255,0),line_point)
+	cv2.line(img,(p5[0],p5[1]),(p7[0],p7[1]), (0,255,0),line_point)
 
 	# draw right face
-	cv2.line(img,(p2[0],p2[1]),(p6[0],p6[1]), (0,255,0),1)
-	cv2.line(img,(p1[0],p1[1]),(p5[0],p5[1]), (0,255,0),1)
+	cv2.line(img,(p2[0],p2[1]),(p6[0],p6[1]), (0,255,0),line_point)
+	cv2.line(img,(p1[0],p1[1]),(p5[0],p5[1]), (0,255,0),line_point)
 	
 	# draw left face
-	cv2.line(img,(p3[0],p3[1]),(p7[0],p7[1]), (0,255,0),1)
-	cv2.line(img,(p4[0],p4[1]),(p8[0],p8[1]), (0,255,0),1)
+	cv2.line(img,(p3[0],p3[1]),(p7[0],p7[1]), (0,255,0),line_point)
+	cv2.line(img,(p4[0],p4[1]),(p8[0],p8[1]), (0,255,0),line_point)
 
 	# Show the image and wait key press
 	cv2.imshow(wname, img)

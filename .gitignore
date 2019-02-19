@@ -338,5 +338,15 @@ multi_obj_pose_estimation/
 cfg/darknet19_448.conv.23
 Gate_Static_2/
 Static_Gate/
+Gate_Random_1/
+generate_results.py
+generate_results_riseq.py
+generate_submission.py
+helper.py
+random_submission.py
+testing/
+Gate_Static_2test.txt
+Gate_Static_2train.txt
+
 
 	

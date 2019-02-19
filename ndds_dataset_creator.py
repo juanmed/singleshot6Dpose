@@ -58,10 +58,16 @@ def test_image(img_f, centroid, cuboid, o_range,bbox):
 	br[1] = max(0,br[1])
 	br[1] = min(width,br[1])
 
+	# draw bounding box
 	cv2.line(img,(tl[1],tl[0]), (br[1],tl[0]), (0,255,0),2)
 	cv2.line(img,(tl[1],tl[0]), (tl[1],br[0]), (0,255,0),2)
 	cv2.line(img,(tl[1],br[0]), (br[1],br[0]), (0,255,0),2)
 	cv2.line(img,(br[1],tl[0]), (br[1],br[0]), (0,255,0),2)
+
+	#cv2.line(img,(tl[0],tl[1]), (br[0],tl[1]), (0,255,0),2)
+	#cv2.line(img,(tl[0],tl[1]), (tl[0],br[1]), (0,255,0),2)
+	#cv2.line(img,(tl[0],br[1]), (br[0],br[1]), (0,255,0),2)
+	#cv2.line(img,(br[0],tl[1]), (br[0],br[1]), (0,255,0),2)	
 
 	# draw line representing range
 	cv2.line(img,(tl[1],tl[0]),(tl[1]+int(o_range[0]),tl[0]+int(o_range[1])),(255,0,0),1)
@@ -101,8 +107,8 @@ def convert_labels(label_path, det_path, percent):
 		#print(json_file)
 
 		# limit files to analyze. For debugging purposes.
-		#if i > 3:
-		#	continue
+		if i > 3:
+			continue
 
 
 		loc, suffix, ext = json_file.split(".")
@@ -152,7 +158,7 @@ def convert_labels(label_path, det_path, percent):
 
 		# view bounding box and cuboid over image
 		# for debugging purposes
-		#test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
+		test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
 
 
 
