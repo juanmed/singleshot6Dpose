@@ -399,7 +399,7 @@ if __name__ == "__main__":
             # TRAIN
             niter = train(epoch)
             # TEST and SAVE
-            if (epoch % 1 == 0) and (epoch is not 0): 
+            if (epoch % 10 == 0) and (epoch is not 0): 
                 test(epoch, niter)
                 logging('save training stats to %s/costs.npz' % (backupdir))
                 np.savez(os.path.join(backupdir, "costs.npz"),
@@ -409,9 +409,9 @@ if __name__ == "__main__":
                     testing_accuracies=testing_accuracies,
                     testing_errors_pixel=testing_errors_pixel,
                     testing_errors_angle=testing_errors_angle) 
-                #if (testing_accuracies[-1] > best_acc ):
-                best_acc = testing_accuracies[-1]
-                logging('best model so far!')
-                logging('save weights to %s/model.weights' % (backupdir))
-                model.save_weights('%s/model.weights' % (backupdir))
+                if (testing_accuracies[-1] > best_acc ):
+                    best_acc = testing_accuracies[-1]
+                    logging('best model so far!')
+                    logging('save weights to %s/model.weights' % (backupdir))
+                    model.save_weights('%s/model.weights' % (backupdir))
         shutil.copy2('%s/model.weights' % (backupdir), '%s/model_backup.weights' % (backupdir))
