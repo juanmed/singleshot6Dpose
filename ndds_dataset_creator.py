@@ -6,6 +6,7 @@ import cv2
 import json
 import argparse
 import glob, os
+import time
 
 def parse_args():
     """Use argparse to get command line arguments."""
@@ -49,14 +50,14 @@ def test_image(img_f, centroid, cuboid, o_range,bbox):
 	br[0] = int(br[0])
 	br[1] = int(br[1])
 	# limit bounding box to image size
-	tl[0] = max(0,tl[0])
-	tl[0] = min(height,tl[0])
-	tl[1] = max(0,tl[1])
-	tl[1] = min(width,tl[1])
-	br[0] = max(0,br[0])
-	br[0] = min(height,br[0])
-	br[1] = max(0,br[1])
-	br[1] = min(width,br[1])
+	#tl[0] = max(0,tl[0])
+	#tl[0] = min(height,tl[0])
+	#tl[1] = max(0,tl[1])
+	#tl[1] = min(width,tl[1])
+	#br[0] = max(0,br[0])
+	#br[0] = min(height,br[0])
+	#br[1] = max(0,br[1])
+	#br[1] = min(width,br[1])
 
 	# draw bounding box
 	cv2.line(img,(tl[1],tl[0]), (br[1],tl[0]), (0,255,0),2)
@@ -78,6 +79,7 @@ def test_image(img_f, centroid, cuboid, o_range,bbox):
 	# Show the image and wait key press
 	cv2.imshow(wname, img)
 	cv2.waitKey()
+	#cv2.destroyAllWindows()
 
 def convert_labels(label_path, det_path, percent):
 
@@ -85,7 +87,7 @@ def convert_labels(label_path, det_path, percent):
 
 	files = [x for x in files if "json" in x]
 	nfiles = int(len(files)-2)  # total no of json files. subtract camera and object settins file
-	print("Desired Percent: {}".format(percent))
+	print("Desired Percent: {}, total files {}".format(percent,nfiles))
 	# open train.txt and test.txt files
 	ftrain = open(label_path+"train.txt", 'a')
 	ftest = open(label_path+"test.txt", 'a')
@@ -95,6 +97,9 @@ def convert_labels(label_path, det_path, percent):
 	test_im = 0
 	train_im = 0
 	# Traverse all .json files
+
+	t1 = time.time()
+
 	for json_file in glob.iglob(os.path.join(label_path,"*.json")):
 
 		# ignore camera intrinsics and object settings file
@@ -104,14 +109,19 @@ def convert_labels(label_path, det_path, percent):
 		if "object_settings" in json_file:
 			continue
 
-		#print(json_file)
 
 		# limit files to analyze. For debugging purposes.
-		if i > 3:
-			continue
+		#if i >= 30:
+		#	break
 
+		#print(json_file)
 
-		loc, suffix, ext = json_file.split(".")
+		try:
+			loc, suffix, ext = json_file.split(".")
+		except:
+			loc, ext = json_file.split(".")
+			suffix = None
+
 		loc = loc.split("/")
 		name = loc[-1]
 		save_dir = ""
@@ -119,7 +129,10 @@ def convert_labels(label_path, det_path, percent):
 			save_dir = save_dir + folder+"/"
 
 		# corresponding image name
-		img_file = save_dir+name+"."+suffix+".png"
+		if suffix is not None:
+			img_file = save_dir+name+"."+suffix+".png"
+		else:
+			img_file = save_dir+name+".png"
 
 		# load image
 		img = cv2.imread(img_file)
@@ -143,14 +156,14 @@ def convert_labels(label_path, det_path, percent):
 		tl = bbox['top_left']
 		br = bbox['bottom_right']
 		# limit bounding box to image size
-		tl[0] = max(0,tl[0])
-		tl[0] = min(height,tl[0])
-		tl[1] = max(0,tl[1])
-		tl[1] = min(width,tl[1])
-		br[0] = max(0,br[0])
-		br[0] = min(height,br[0])
-		br[1] = max(0,br[1])
-		br[1] = min(width,br[1])
+		#tl[0] = max(0,tl[0])
+		#tl[0] = min(height,tl[0])
+		#tl[1] = max(0,tl[1])
+		#tl[1] = min(width,tl[1])
+		#br[0] = max(0,br[0])
+		#br[0] = min(height,br[0])
+		#br[1] = max(0,br[1])
+		#br[1] = min(width,br[1])
 
 		y_range = float(br[0] - tl[0])
 		x_range = float(br[1] - tl[1])
@@ -158,12 +171,19 @@ def convert_labels(label_path, det_path, percent):
 
 		# view bounding box and cuboid over image
 		# for debugging purposes
-		test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
-
+		#test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
 
 
 		# create corresponding label file
-		f = open(save_dir+name+"."+suffix+".txt",'w')
+
+
+		if suffix is not None:
+			label_file = save_dir+name+"."+suffix+".txt"
+		else:
+			label_file = save_dir+name+".txt"
+
+		#print("Label file name: {}".format(label_file))
+		f = open(label_file,"w")
 		f.write("0 ")
 		
 		# write centroid coordinates
@@ -172,8 +192,8 @@ def convert_labels(label_path, det_path, percent):
 
 		# write projected cuboid coordinates to file
 		# but in the order singleshot6dpose expects...
-		for i in [6,5,2,1,7,4,3,0]:
-			element = cuboid[i]
+		for j in [3,0,7,4,2,1,6,5]:
+			element = cuboid[j]
 			f.write("{:.6f} ".format(element[0]/width))
 			f.write("{:.6f} ".format(element[1]/height))
 
@@ -183,15 +203,29 @@ def convert_labels(label_path, det_path, percent):
 		f.close()
 
 		i = i + 1
+		if ( (i % 100) == 0):
+			t2 = time.time()
+			print("Processed images: {} in {:.6f}".format(i,t2-t1))
+			t1 = t2
+
+		#print("i : {}".format(i))
 		count = count + 1
+
+		# create image file name
+		if suffix is not None:
+			img_dir  = save_dir+"JPEGImages/"+name+"."+suffix+".png\n"
+		else:
+			img_dir = save_dir+"JPEGImages/"+name+".png\n"
+
+		#print("Img dir: "+img_dir)
 
 		if (count > int(nfiles*percent)):
 			# write on test.txt file
-			ftest.write(save_dir+"JPEGImages/"+name+"."+suffix+".png\n")
+			ftest.write(img_dir)
 			test_im = test_im +1
 		else:
 			# write image name on train.txt
-			ftrain.write(save_dir+"JPEGImages/"+name+"."+suffix+".png\n")
+			ftrain.write(img_dir)
 			train_im = train_im + 1
 	
 	ftest.close()

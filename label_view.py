@@ -9,8 +9,8 @@ import numpy as np
 import os
 
 
-label_dir = "Gate/Train/000000.txt" #"LINEMOD/ape/labels/000000.txt"
-image_dir = "Gate/Train/000000.png" #"LINEMOD/ape/JPEGImages/000000.jpg"
+label_dir = "Gate_Random_1/004999.txt" #"LINEMOD/ape/labels/000000.txt"
+image_dir = "Gate_Random_1/004999.png" #"LINEMOD/ape/JPEGImages/000000.jpg"
 
 
 #label_dir = "LINEMOD/ape/labels/000000.txt"
