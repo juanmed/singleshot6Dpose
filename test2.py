@@ -169,7 +169,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 
     # Draw cube lines around detected object
     # draw front face
-    line_point = 3
+    line_point = 2
     cv2.line(img,(p1[0],p1[1]),(p2[0],p2[1]), (0,255,0),line_point)
     cv2.line(img,(p2[0],p2[1]),(p4[0],p4[1]), (0,255,0),line_point)
     cv2.line(img,(p4[0],p4[1]),(p3[0],p3[1]), (0,255,0),line_point)
@@ -208,7 +208,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 
     # Calculate Fly are based based on offset from predicted 2D
     # Projection
-    flyarea_side = 243.84 #cm
+    flyarea_side = 243.84 #cm 8ft
     offset_z = (gate_dim_z - flyarea_side)/2.0
     offset_x = (gate_dim_x - flyarea_side)/2.0
 
@@ -216,6 +216,8 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     offset_x_ratio = (offset_x/gate_dim_x)
     #print("Offset X ratio: {}, Offset Z ratio: {}".format(offset_x_ratio,offset_z_ratio))
 
+    #           GATE FRONT
+    #
     # array to store all 4 points
     flyarea_corners = np.zeros((4,2), dtype = 'float32')
     # corner 1
@@ -229,7 +231,11 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     flyarea_corners[2][1] = p1[1] + int((p2[1]-p1[1])*offset_x_ratio)
     # corner 4
     flyarea_corners[3][0] = p3[0] + int((p1[0]-p3[0])*offset_x_ratio)
-    flyarea_corners[3][1] = p3[1] + int((p4[1]-p3[1])*offset_x_ratio)       
+    flyarea_corners[3][1] = p3[1] + int((p4[1]-p3[1])*offset_x_ratio) 
+
+    #           GATE BACK
+    #      
+    #
 
     # draw each predicted 2D point
     for i, (x,y) in enumerate(flyarea_corners):

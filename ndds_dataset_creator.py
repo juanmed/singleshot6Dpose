@@ -171,7 +171,7 @@ def convert_labels(label_path, det_path, percent):
 
 		# view bounding box and cuboid over image
 		# for debugging purposes
-		#test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
+		test_image(img_file, centroid, cuboid, [x_range,y_range],bbox)
 
 
 		# create corresponding label file

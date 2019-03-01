@@ -17,7 +17,7 @@ img_keys = [img_i.split('/')[-1] for img_i in img_file]
 # Instantiate a new detector
 finalDetector = GenerateFinalDetections()
 # load image, convert to RGB, run model and plot detections. 
-limit = min(len(img_keys),len(img_keys))
+limit = min(100,len(img_keys))
 for img_key in img_keys[0:limit-1]:
     img =cv2.imread('testing/images/'+img_key)
     img_test =cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

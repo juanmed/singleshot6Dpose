@@ -347,6 +347,7 @@ random_submission.py
 testing/
 Gate_Static_2test.txt
 Gate_Static_2train.txt
-
-
+op_weights/
+*.json
+ReadMe
 	
