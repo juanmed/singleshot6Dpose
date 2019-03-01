@@ -15,6 +15,33 @@ from darknet import Darknet
 from utils import *
 from MeshPly import MeshPly
 
+
+class Line():
+    def __init__(self,p1,p2):
+        
+        # tilt
+        if( (p2[0]-p1[0]) == 0.0 ):
+            self.m = "NaN"     # vertical line
+        else:
+            self.m = (p2[1]-p1[1])/(p2[0]-p1[0])
+        
+        # intercept
+        if(self.m == "NaN"):
+            self.b = "NaN"
+        else:
+            self.b = -1.0*self.m*p1[0] + p1[1]
+
+        # self.p = p1   #store one sample
+
+    def eval(self,x):
+        # TODO verify if line is vertical
+        return(x*self.m + self.b)
+
+def find_intersection(l1, l2):
+    x = (l2.b - l1.b)/(l1.m - l2.m) # x coord of intersection point
+    y = l1.eval(x) # y coord of intersection point
+    return x,y
+
 # estimate bounding box
 #@torch.no_grad
 def test(datacfg, cfgfile, weightfile, imgfile):
@@ -47,7 +74,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     #print("Vertices are:\n {} Shape: {} Type: {}".format(vertices,vertices.shape, type(vertices)))
     
     corners3D   = get_3D_corners(vertices)
-    print("3D Corners are:\n {} Shape: {} Type: {}".format(corners3D,corners3D.shape, type(corners3D)))
+    #print("3D Corners are:\n {} Shape: {} Type: {}".format(corners3D,corners3D.shape, type(corners3D)))
 
     diam        = float(options['diam'])
 
@@ -219,26 +246,66 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     #           GATE FRONT
     #
     # array to store all 4 points
-    flyarea_corners = np.zeros((4,2), dtype = 'float32')
+    flyarea_corners_front = np.zeros((4,2), dtype = 'float32')
     # corner 1
-    flyarea_corners[0][0] = p4[0] + int((p2[0]-p4[0])*offset_x_ratio)
-    flyarea_corners[0][1] = p4[1] + int((p3[1]-p4[1])*offset_z_ratio)
+    flyarea_corners_front[0][0] = p4[0] + int((p2[0]-p4[0])*offset_x_ratio)
+    flyarea_corners_front[0][1] = p4[1] + int((p3[1]-p4[1])*offset_z_ratio)
     # corner 2
-    flyarea_corners[1][0] = p2[0] + int((p4[0]-p2[0])*offset_x_ratio)
-    flyarea_corners[1][1] = p2[1] + int((p1[1]-p2[1])*offset_x_ratio) 
+    flyarea_corners_front[1][0] = p2[0] + int((p4[0]-p2[0])*offset_x_ratio)
+    flyarea_corners_front[1][1] = p2[1] + int((p1[1]-p2[1])*offset_x_ratio) 
     # corner 3
-    flyarea_corners[2][0] = p1[0] + int((p3[0]-p1[0])*offset_x_ratio)
-    flyarea_corners[2][1] = p1[1] + int((p2[1]-p1[1])*offset_x_ratio)
+    flyarea_corners_front[2][0] = p1[0] + int((p3[0]-p1[0])*offset_x_ratio)
+    flyarea_corners_front[2][1] = p1[1] + int((p2[1]-p1[1])*offset_x_ratio)
     # corner 4
-    flyarea_corners[3][0] = p3[0] + int((p1[0]-p3[0])*offset_x_ratio)
-    flyarea_corners[3][1] = p3[1] + int((p4[1]-p3[1])*offset_x_ratio) 
+    flyarea_corners_front[3][0] = p3[0] + int((p1[0]-p3[0])*offset_x_ratio)
+    flyarea_corners_front[3][1] = p3[1] + int((p4[1]-p3[1])*offset_x_ratio) 
+    #print("Front points: {}".format(flyarea_corners_front))
+
+    # draw front gate area
+    fa_p1_f = flyarea_corners_front[0]
+    fa_p2_f = flyarea_corners_front[1]
+    fa_p3_f = flyarea_corners_front[2]
+    fa_p4_f = flyarea_corners_front[3]
+
+    cv2.line(img,(fa_p1_f[0],fa_p1_f[1]),(fa_p2_f[0],fa_p2_f[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p2_f[0],fa_p2_f[1]),(fa_p3_f[0],fa_p3_f[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p4_f[0],fa_p4_f[1]),(fa_p1_f[0],fa_p1_f[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p3_f[0],fa_p3_f[1]),(fa_p4_f[0],fa_p4_f[1]), (255,0,255),line_point)
+
 
     #           GATE BACK
     #      
-    #
+    # array to store all 4 points
+    flyarea_corners_back = np.zeros((4,2), dtype = 'float32')
+    # corner 1
+    flyarea_corners_back[0][0] = p8[0] + int((p6[0]-p8[0])*offset_x_ratio)
+    flyarea_corners_back[0][1] = p8[1] + int((p7[1]-p8[1])*offset_z_ratio)
+    # corner 2
+    flyarea_corners_back[1][0] = p6[0] + int((p8[0]-p6[0])*offset_x_ratio)
+    flyarea_corners_back[1][1] = p6[1] + int((p5[1]-p6[1])*offset_x_ratio) 
+    # corner 3
+    flyarea_corners_back[2][0] = p5[0] + int((p7[0]-p5[0])*offset_x_ratio)
+    flyarea_corners_back[2][1] = p5[1] + int((p6[1]-p5[1])*offset_x_ratio)
+    # corner 4
+    flyarea_corners_back[3][0] = p7[0] + int((p5[0]-p7[0])*offset_x_ratio)
+    flyarea_corners_back[3][1] = p7[1] + int((p8[1]-p7[1])*offset_x_ratio) 
+    #print("Back points: {}".format(flyarea_corners_back))
 
+    # draw back gate area
+    fa_p1_b = flyarea_corners_back[0]
+    fa_p2_b = flyarea_corners_back[1]
+    fa_p3_b = flyarea_corners_back[2]
+    fa_p4_b = flyarea_corners_back[3]
+
+    cv2.line(img,(fa_p1_b[0],fa_p1_b[1]),(fa_p2_b[0],fa_p2_b[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p2_b[0],fa_p2_b[1]),(fa_p3_b[0],fa_p3_b[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p4_b[0],fa_p4_b[1]),(fa_p1_b[0],fa_p1_b[1]), (255,0,255),line_point)
+    cv2.line(img,(fa_p3_b[0],fa_p3_b[1]),(fa_p4_b[0],fa_p4_b[1]), (255,0,255),line_point)
+
+
+    """
     # draw each predicted 2D point
-    for i, (x,y) in enumerate(flyarea_corners):
+    for i, (x,y) in enumerate(flyarea_corners_front):
         # get colors to draw the lines
         col1 = 0#np.random.randint(0,256)
         col2 = 0#np.random.randint(0,256)
@@ -246,9 +313,151 @@ def test(datacfg, cfgfile, weightfile, imgfile):
         cv2.circle(img, (x,y), 3, (col1,col2,col3), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (col1, col2, col3), 1)
 
+    # draw each predicted 2D point
+    for i, (x,y) in enumerate(flyarea_corners_back):
+        # get colors to draw the lines
+        col1 = 0#np.random.randint(0,256)
+        col2 = 0#np.random.randint(0,256)
+        col3 = 255#np.random.randint(0,256)
+        cv2.circle(img, (x,y), 3, (col1,col2,col3), -1)
+        cv2.putText(img, str(i+4), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (col1, col2, col3), 1)
+    """
 
-    # Get each predicted point from the flyable area...this is just
-    # to draw the bounding box clearly
+    #           GATE ALL FRONT AND BACK 
+    #           LINES
+    # FRONT
+    front_up = Line(flyarea_corners_front[0],flyarea_corners_front[1])
+    front_right = Line(flyarea_corners_front[1],flyarea_corners_front[2])
+    front_down = Line(flyarea_corners_front[2],flyarea_corners_front[3])
+    front_left = Line(flyarea_corners_front[3],flyarea_corners_front[0])
+    #print("Front Up Line: m {:.4f} b{:.4f}".format(front_up.m, front_up.b))
+    #print("Front Right Line: m {:.4f} b{:.4f}".format(front_right.m, front_right.b))
+    #print("Front Down Line: m {:.4f} b{:.4f}".format(front_down.m, front_down.b))
+    #print("Front Left Line: m {:.4f} b{:.4f}".format(front_left.m, front_left.b))
+
+
+    # BACK
+    back_up = Line(flyarea_corners_back[0],flyarea_corners_back[1])
+    back_right = Line(flyarea_corners_back[1],flyarea_corners_back[2])
+    back_down = Line(flyarea_corners_back[2],flyarea_corners_back[3])
+    back_left = Line(flyarea_corners_back[3],flyarea_corners_back[0])
+    #print("Back Up Line: m {:.4f} b{:.4f}".format(back_up.m, back_up.b))
+    #print("Back Right Line: m {:.4f} b{:.4f}".format(back_right.m, back_right.b))
+    #print("Back Down Line: m {:.4f} b{:.4f}".format(back_down.m, back_down.b))
+    #print("Back Left Line: m {:.4f} b{:.4f}".format(back_left.m, back_left.b))
+
+    # Intersections
+    intersections = np.zeros((8,2))
+    # store in an structure that makes looping easy
+    front_lines = [[front_right,front_left],[front_right,front_left],[front_up,front_down],[front_up,front_down]]
+    back_lines = [back_up,back_down,back_right,back_left]
+
+    # compare back line with corresponding front lines
+    for k, (back_line, front_line_pair) in enumerate(zip(back_lines, front_lines)):
+        for j, front_line in enumerate(front_line_pair):
+            x_i = (back_line.b - front_line.b)/(front_line.m - back_line.m) # x coord of intersection point
+            y_i = back_line.eval(x_i) # y coord of intersection point
+            intersections[k*2+j][0] = x_i
+            intersections[k*2+j][1] = y_i
+
+    #print("Intersections: ")
+    #print(intersections)
+
+    # draw each intersection point
+    #for i, (x,y) in enumerate(intersections):
+        #cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
+        #cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)    
+
+
+    # group all points
+    points = np.concatenate((flyarea_corners_front,flyarea_corners_back, intersections), axis = 0)
+
+    # the corners of the flyable area is composed of the 4 points with the  
+    # shortest distance to the centroid
+    points_sorted = [(np.linalg.norm(points[i]-center),points[i]) for i in range(points.shape[0])]
+    points_sorted.sort()
+    #print(points_sorted)    
+
+    flyarea_corners = np.zeros((4,2), dtype = 'float32')    
+
+    """
+    for k in range(4):
+        #print(k)
+        point = points_sorted[k][1]
+        #print(point)
+        flyarea_corners[k] = point
+        x = point[0]
+        y = point[1]
+        cv2.circle(img, (int(x),int(y)), 10, (0,255,255), -1)
+        cv2.putText(img, str(k), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)         
+    """
+
+    # corner 1
+    x1,y1 = find_intersection(front_up,back_left)
+    dummy1 = np.array([x1,y1])
+    x1,y1 = find_intersection(back_up,front_left)
+    dummy2 = np.array([x1,y1])
+    c_points = np.stack((flyarea_corners_front[0],flyarea_corners_back[0],dummy1,dummy2))
+    points_sorted = [(np.linalg.norm(c_points[i]-center),c_points[i]) for i in range(c_points.shape[0])]
+    points_sorted.sort()
+    flyarea_corners[0]=points_sorted[0][1]  # extract the point with shortest distance to centroid
+    
+    
+    # draw each intersection point
+    for i, (x,y) in enumerate(c_points):
+        cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
+        cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+    
+    # corner 2
+    x1,y1 = find_intersection(front_up,back_right)
+    dummy1 = np.array([x1,y1])
+    x1,y1 = find_intersection(back_up,front_right)
+    dummy2 = np.array([x1,y1])
+    c_points = np.stack((flyarea_corners_front[1],flyarea_corners_back[1],dummy1,dummy2))
+    points_sorted = [(np.linalg.norm(c_points[i]-center),c_points[i]) for i in range(c_points.shape[0])]
+    points_sorted.sort()
+    flyarea_corners[1]=points_sorted[0][1]  # extract the point with shortest distance to centroid
+
+    
+    # draw each intersection point
+    for i, (x,y) in enumerate(c_points):
+        cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
+        cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+
+    # corner 3
+    x1,y1 = find_intersection(front_down,back_right)
+    dummy1 = np.array([x1,y1])
+    x1,y1 = find_intersection(back_down,front_right)
+    dummy2 = np.array([x1,y1])
+    c_points = np.stack((flyarea_corners_front[2],flyarea_corners_back[2],dummy1,dummy2))
+    points_sorted = [(np.linalg.norm(c_points[i]-center),c_points[i]) for i in range(c_points.shape[0])]
+    points_sorted.sort()
+    flyarea_corners[2]=points_sorted[0][1]  # extract the point with shortest distance to centroid
+
+    
+    # draw each intersection point
+    for i, (x,y) in enumerate(c_points):
+        cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
+        cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+    
+
+    # corner 4
+    x1,y1 = find_intersection(front_down,back_left)
+    dummy1 = np.array([x1,y1])
+    x1,y1 = find_intersection(back_down,front_left)
+    dummy2 = np.array([x1,y1])
+    c_points = np.stack((flyarea_corners_front[3],flyarea_corners_back[3],dummy1,dummy2))
+    points_sorted = [(np.linalg.norm(c_points[i]-center),c_points[i]) for i in range(c_points.shape[0])]
+    points_sorted.sort()
+    flyarea_corners[3]=points_sorted[0][1]  # extract the point with shortest distance to centroid
+
+    
+    # draw each intersection point
+    for i, (x,y) in enumerate(c_points):
+        cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
+        cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+    
+
     fa_p1 = flyarea_corners[0]
     fa_p2 = flyarea_corners[1]
     fa_p3 = flyarea_corners[2]
