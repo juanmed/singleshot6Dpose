@@ -31,7 +31,7 @@ class Line():
         else:
             self.b = -1.0*self.m*p1[0] + p1[1]
 
-        # self.p = p1   #store one sample
+        self.p = p1   #store one sample
 
     def eval(self,x):
         # TODO verify if line is vertical
@@ -456,7 +456,6 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     for i, (x,y) in enumerate(c_points):
         cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
-    
 
     fa_p1 = flyarea_corners[0]
     fa_p2 = flyarea_corners[1]
@@ -467,6 +466,48 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     cv2.line(img,(fa_p2[0],fa_p2[1]),(fa_p3[0],fa_p3[1]), (0,0,255),line_point)
     cv2.line(img,(fa_p4[0],fa_p4[1]),(fa_p1[0],fa_p1[1]), (0,0,255),line_point)
     cv2.line(img,(fa_p3[0],fa_p3[1]),(fa_p4[0],fa_p4[1]), (0,0,255),line_point)
+
+
+    #     YET ANOTHER METHOD
+    if( back_up.p[1] > front_up.p[1]):
+        up_line = back_up
+    else:
+        up_line = front_up
+    if( back_down.p[1] < front_down.p[1]):
+        down_line = back_down
+    else:
+        down_line = front_down
+    if( back_right.p[0] < front_right.p[0]):
+        right_line = back_right
+    else:
+        right_line = front_right
+    if( back_left.p[0] > front_left.p[0] ):
+        left_line = back_left
+    else:
+        left_line = front_left
+
+    x1,y1 = find_intersection(up_line,left_line)
+    dummy1 = np.array([x1,y1])
+    flyarea_corners[0] = dummy1
+    x1,y1 = find_intersection(up_line,right_line)
+    dummy1 = np.array([x1,y1])
+    flyarea_corners[1] = dummy1
+    x1,y1 = find_intersection(down_line,right_line)
+    dummy1 = np.array([x1,y1])
+    flyarea_corners[2] = dummy1
+    x1,y1 = find_intersection(down_line,left_line)
+    dummy1 = np.array([x1,y1])
+    flyarea_corners[3] = dummy1
+
+    fa_p1 = flyarea_corners[0]
+    fa_p2 = flyarea_corners[1]
+    fa_p3 = flyarea_corners[2]
+    fa_p4 = flyarea_corners[3]
+
+    cv2.line(img,(fa_p1[0],fa_p1[1]),(fa_p2[0],fa_p2[1]), (255,255,0),line_point)
+    cv2.line(img,(fa_p2[0],fa_p2[1]),(fa_p3[0],fa_p3[1]), (255,255,0),line_point)
+    cv2.line(img,(fa_p4[0],fa_p4[1]),(fa_p1[0],fa_p1[1]), (255,255,0),line_point)
+    cv2.line(img,(fa_p3[0],fa_p3[1]),(fa_p4[0],fa_p4[1]), (255,255,0),line_point)
 
     """
     ############################################################
