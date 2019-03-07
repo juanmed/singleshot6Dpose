@@ -267,11 +267,12 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     fa_p3_f = flyarea_corners_front[2]
     fa_p4_f = flyarea_corners_front[3]
 
+    """
     cv2.line(img,(fa_p1_f[0],fa_p1_f[1]),(fa_p2_f[0],fa_p2_f[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p2_f[0],fa_p2_f[1]),(fa_p3_f[0],fa_p3_f[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p4_f[0],fa_p4_f[1]),(fa_p1_f[0],fa_p1_f[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p3_f[0],fa_p3_f[1]),(fa_p4_f[0],fa_p4_f[1]), (255,0,255),line_point)
-
+    """
 
     #           GATE BACK
     #      
@@ -297,11 +298,12 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     fa_p3_b = flyarea_corners_back[2]
     fa_p4_b = flyarea_corners_back[3]
 
+    """
     cv2.line(img,(fa_p1_b[0],fa_p1_b[1]),(fa_p2_b[0],fa_p2_b[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p2_b[0],fa_p2_b[1]),(fa_p3_b[0],fa_p3_b[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p4_b[0],fa_p4_b[1]),(fa_p1_b[0],fa_p1_b[1]), (255,0,255),line_point)
     cv2.line(img,(fa_p3_b[0],fa_p3_b[1]),(fa_p4_b[0],fa_p4_b[1]), (255,0,255),line_point)
-
+    """
 
     """
     # draw each predicted 2D point
@@ -402,12 +404,13 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     points_sorted.sort()
     flyarea_corners[0]=points_sorted[0][1]  # extract the point with shortest distance to centroid
     
-    
+    """
     # draw each intersection point
     for i, (x,y) in enumerate(c_points):
         cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
-    
+    """
+
     # corner 2
     x1,y1 = find_intersection(front_up,back_right)
     dummy1 = np.array([x1,y1])
@@ -418,11 +421,12 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     points_sorted.sort()
     flyarea_corners[1]=points_sorted[0][1]  # extract the point with shortest distance to centroid
 
-    
+    """
     # draw each intersection point
     for i, (x,y) in enumerate(c_points):
         cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+    """
 
     # corner 3
     x1,y1 = find_intersection(front_down,back_right)
@@ -434,12 +438,12 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     points_sorted.sort()
     flyarea_corners[2]=points_sorted[0][1]  # extract the point with shortest distance to centroid
 
-    
+    """
     # draw each intersection point
     for i, (x,y) in enumerate(c_points):
         cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
-    
+    """
 
     # corner 4
     x1,y1 = find_intersection(front_down,back_left)
@@ -451,22 +455,24 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     points_sorted.sort()
     flyarea_corners[3]=points_sorted[0][1]  # extract the point with shortest distance to centroid
 
-    
+    """
     # draw each intersection point
     for i, (x,y) in enumerate(c_points):
         cv2.circle(img, (int(x),int(y)), 3, (0,255,255), -1)
         cv2.putText(img, str(i), (int(x) + 5, int(y) + 5),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1) 
+    """
 
     fa_p1 = flyarea_corners[0]
     fa_p2 = flyarea_corners[1]
     fa_p3 = flyarea_corners[2]
     fa_p4 = flyarea_corners[3]
 
+    """
     cv2.line(img,(fa_p1[0],fa_p1[1]),(fa_p2[0],fa_p2[1]), (0,0,255),line_point)
     cv2.line(img,(fa_p2[0],fa_p2[1]),(fa_p3[0],fa_p3[1]), (0,0,255),line_point)
     cv2.line(img,(fa_p4[0],fa_p4[1]),(fa_p1[0],fa_p1[1]), (0,0,255),line_point)
     cv2.line(img,(fa_p3[0],fa_p3[1]),(fa_p4[0],fa_p4[1]), (0,0,255),line_point)
-
+    """
 
     #     YET ANOTHER METHOD
     if( back_up.p[1] > front_up.p[1]):
@@ -504,10 +510,10 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     fa_p3 = flyarea_corners[2]
     fa_p4 = flyarea_corners[3]
 
-    cv2.line(img,(fa_p1[0],fa_p1[1]),(fa_p2[0],fa_p2[1]), (255,255,0),line_point)
-    cv2.line(img,(fa_p2[0],fa_p2[1]),(fa_p3[0],fa_p3[1]), (255,255,0),line_point)
-    cv2.line(img,(fa_p4[0],fa_p4[1]),(fa_p1[0],fa_p1[1]), (255,255,0),line_point)
-    cv2.line(img,(fa_p3[0],fa_p3[1]),(fa_p4[0],fa_p4[1]), (255,255,0),line_point)
+    cv2.line(img,(fa_p1[0],fa_p1[1]),(fa_p2[0],fa_p2[1]), (0,0,255),line_point)
+    cv2.line(img,(fa_p2[0],fa_p2[1]),(fa_p3[0],fa_p3[1]), (0,0,255),line_point)
+    cv2.line(img,(fa_p4[0],fa_p4[1]),(fa_p1[0],fa_p1[1]), (0,0,255),line_point)
+    cv2.line(img,(fa_p3[0],fa_p3[1]),(fa_p4[0],fa_p4[1]), (0,0,255),line_point)
 
     """
     ############################################################
