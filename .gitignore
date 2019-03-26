@@ -331,7 +331,7 @@ ASALocalRun/
 
 # Local Folders
 backup/
-LINEMODE/
+LINEMOD/
 VOCdevkit/
 multi_obj_pose_estimation/
 *.pyc
@@ -350,4 +350,7 @@ Gate_Static_2train.txt
 op_weights/
 *.json
 ReadMe
+submission/*
+requirements.txt
+
 	

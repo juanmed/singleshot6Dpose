@@ -24,6 +24,7 @@ for img_key in img_keys[0:limit-1]:
 
     bb_all = finalDetector.predict(img_test)
     bb_all = bb_all[0]
+    bb_all.pop()   # drop last point (confidence)
     print(bb_all)
     # draw lines
     line_point = 3

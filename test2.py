@@ -58,8 +58,8 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     #Parameters for the network
     seed        = int(time.time())
     gpus        = '0'       # define gpus to use
-    test_width  = 544       # define test image size
-    test_height = 544
+    test_width  = 608       # define test image size
+    test_height = 608
     torch.manual_seed(seed) # seed torch random
     use_cuda    = True
     if use_cuda:
@@ -74,6 +74,10 @@ def test(datacfg, cfgfile, weightfile, imgfile):
     #print("Vertices are:\n {} Shape: {} Type: {}".format(vertices,vertices.shape, type(vertices)))
     
     corners3D   = get_3D_corners(vertices)
+    feet_cm = 30.48 # 1 ft = 30.48 cm
+    corners3D[0] = np.array([-11*feet_cm/2.0, -11*feet_cm/2.0, -11*feet_cm/2.0, -11*feet_cm/2.0, 11*feet_cm/2.0, 11*feet_cm/2.0, 11*feet_cm/2.0, 11*feet_cm/2.0])
+    corners3D[1] = np.array([-feet_cm/2.0, -feet_cm/2.0, feet_cm/2.0, feet_cm/2.0, -feet_cm/2.0, -feet_cm/2.0, feet_cm/2.0, feet_cm/2.0])
+    corners3D[2] = np.array([-11*feet_cm/2.0, 11*feet_cm/2.0, -11*feet_cm/2.0, 11*feet_cm/2.0, -11*feet_cm/2.0, 11*feet_cm/2.0, -11*feet_cm/2.0, 11*feet_cm/2.0])
     #print("3D Corners are:\n {} Shape: {} Type: {}".format(corners3D,corners3D.shape, type(corners3D)))
 
     diam        = float(options['diam'])
@@ -137,6 +141,9 @@ def test(datacfg, cfgfile, weightfile, imgfile):
             best_conf_est = boxes[j][18]
             best_box_index = j
     #print("Best box is: {} and 2D prediction is {}".format(best_box_index,box_pr))
+    #print("Confidence is: {}".format(best_conf_est))
+    print(best_conf_est.item(),type(best_conf_est.item()))
+
 
     # Denormalize the corner predictions
     # This are the predicted 2D points with which a bounding cube can be drawn

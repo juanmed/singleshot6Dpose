@@ -1,4 +1,5 @@
 # Create flyable area ground thruth dataset
+# Use as input json files from NDDS and outputs .txt with format compliant with singleshot6dpose
 
 # Load libraries
 import json
