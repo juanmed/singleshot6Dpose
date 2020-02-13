@@ -73,7 +73,7 @@ def test(datacfg, cfgfile, weightfile, imgfile):
 	t1 = time.time()
 	img = transforms.Compose([transforms.ToTensor(),])(img)#.float()
 	img = Variable(img, requires_grad = True)
-	img = img.unsqueeze(0)
+	img = img.unsqueeze(0)  # add a fake batch dimension
 	img = img.cuda()
 
 	# ******************************************#

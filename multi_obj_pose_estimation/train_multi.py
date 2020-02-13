@@ -280,7 +280,13 @@ def eval(niter, datacfg, cfgfile):
     testing_accuracies.append(acc)
 
 def test(niter):
-    
+
+
+    cfgfile = 'cfg/yolo-pose-multi.cfg'
+    datacfg = 'cfg/box_occlusion.data'
+    logging("Testing ape...")
+    eval(niter, datacfg, cfgfile)    
+    """
     cfgfile = 'cfg/yolo-pose-multi.cfg'
     datacfg = 'cfg/ape_occlusion.data'
     logging("Testing ape...")
@@ -300,6 +306,7 @@ def test(niter):
     datacfg = 'cfg/glue_occlusion.data'
     logging("Testing glue...")
     eval(niter, datacfg, cfgfile)
+    """
     # datacfg = 'cfg/holepuncher_occlusion.data'
     # logging("Testing holepuncher...")
     # eval(niter, datacfg, cfgfile)
@@ -368,7 +375,7 @@ if __name__ == "__main__":
     processed_batches = model.seen/batch_size
     init_width        = model.width
     init_height       = model.height
-    init_epoch        = model.seen/nsamples 
+    init_epoch        = model.seen//nsamples 
 
     # Variable to save
     training_iters          = []
@@ -403,7 +410,7 @@ if __name__ == "__main__":
         logging('evaluating ...')
         test(0, 0)
     else:
-        for epoch in range(init_epoch, max_epochs): 
+        for epoch in range(init_epoch+20, max_epochs): 
             # TRAIN
             niter = train(epoch)
             # TEST and SAVE

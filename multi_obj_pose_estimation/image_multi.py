@@ -49,6 +49,9 @@ def get_add_objs(objname):
         add_objs = ['ape', 'benchvise', 'cam', 'can', 'driller', 'duck', 'holepuncher']
     return add_objs
 
+def get_add_objs2(hello):
+    return list()
+
 def mask_background(img, mask):
     ow, oh = img.size
     
@@ -370,7 +373,7 @@ def augment_objects(imgpath, objname, add_objs, shape, jitter, hue, saturation, 
     
     random.shuffle(add_objs)
     labpath = imgpath.replace('images', 'labels').replace('JPEGImages', 'labels').replace('.jpg', '.txt').replace('.png','.txt')
-    maskpath = imgpath.replace('JPEGImages', 'mask').replace('/00', '/').replace('.jpg', '.png')
+    maskpath = imgpath.replace('JPEGImages', 'mask').replace('.png', '.cs.png')#.replace('/00', '/')
 
     # Read the image and the mask
     img = Image.open(imgpath).convert('RGB')
@@ -440,7 +443,7 @@ def load_data_detection(imgpath, shape, jitter, hue, saturation, exposure, bgpat
     # Understand which object it is and get the neighboring objects
     dirname = os.path.dirname(os.path.dirname(imgpath)) ## dir of dir of file
     objname = os.path.basename(dirname)
-    add_objs = get_add_objs(objname)
+    add_objs = get_add_objs2(objname)
     
     # Add additional objects in the scene, apply data augmentation on the objects
     total_masked_img, label, total_mask = augment_objects(imgpath, objname, add_objs, shape, jitter, hue, saturation, exposure)
