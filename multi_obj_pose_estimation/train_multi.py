@@ -183,7 +183,7 @@ def eval(niter, datacfg, cfgfile):
         # Pass the data to GPU
         if use_cuda:
             data = data.cuda()
-            target = target.cuda()
+            #target = target.cuda()
         
         # Wrap tensors in Variable class, set volatile=True for inference mode and to use minimal memory during inference
         data = Variable(data, volatile=True)
@@ -225,6 +225,8 @@ def eval(niter, datacfg, cfgfile):
                         box_pr        = boxes[j]
                         bb2d_gt       = get_2d_bb(box_gt[:18], output.size(3))
                         bb2d_pr       = get_2d_bb(box_pr[:18], output.size(3))
+                        #for a,b in zip(bb2d_gt, bb2d_pr):
+                        #    print(type(a),type(b))
                         iou           = bbox_iou(bb2d_gt, bb2d_pr)
                         match         = corner_confidence9(box_gt[:18], torch.FloatTensor(boxes[j][:18]))
 
@@ -284,7 +286,7 @@ def test(niter):
 
     cfgfile = 'cfg/yolo-pose-multi.cfg'
     datacfg = 'cfg/box_occlusion.data'
-    logging("Testing ape...")
+    logging("Testing box...")
     eval(niter, datacfg, cfgfile)    
     """
     cfgfile = 'cfg/yolo-pose-multi.cfg'
@@ -410,7 +412,7 @@ if __name__ == "__main__":
         logging('evaluating ...')
         test(0, 0)
     else:
-        for epoch in range(init_epoch+20, max_epochs): 
+        for epoch in range(init_epoch, max_epochs): 
             # TRAIN
             niter = train(epoch)
             # TEST and SAVE

@@ -72,11 +72,12 @@ class listDataset(Dataset):
             if self.shape:
                 img = img.resize(self.shape)
             
-            labpath = imgpath.replace('benchvise', self.objclass).replace('images', 'labels_occlusion').replace('JPEGImages', 'labels_occlusion').replace('.jpg', '.txt').replace('.png','.txt')
+            #labpath = imgpath.replace('benchvise', self.objclass).replace('images', 'labels_occlusion').replace('JPEGImages', 'labels_occlusion').replace('.jpg', '.txt').replace('.png','.txt')
+            labpath = imgpath.replace('images', 'labels').replace('JPEGImages', 'labels').replace('.jpg', '.txt').replace('.png','.txt')
             label = torch.zeros(50*21)
             if os.path.getsize(labpath):
                 ow, oh = img.size
-                tmp = torch.from_numpy(read_truths_args(labpath, 8.0/ow))
+                tmp = torch.from_numpy(read_truths_args(labpath)) #, 8.0/ow))
                 tmp = tmp.view(-1)
                 tsz = tmp.numel()
                 if tsz > 50*21:
