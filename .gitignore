@@ -333,7 +333,6 @@ ASALocalRun/
 backup/
 LINEMOD/
 VOCdevkit/
-multi_obj_pose_estimation/
 *.pyc
 cfg/darknet19_448.conv.23
 Gate_Static_2/
@@ -352,5 +351,9 @@ op_weights/
 ReadMe
 submission/*
 requirements.txt
+Box_Random/
+*.weights
+*.zip
+*.tar
 
 	

@@ -409,9 +409,9 @@ if __name__ == "__main__":
                     testing_accuracies=testing_accuracies,
                     testing_errors_pixel=testing_errors_pixel,
                     testing_errors_angle=testing_errors_angle) 
-                if (testing_accuracies[-1] > best_acc ):
-                    best_acc = testing_accuracies[-1]
-                    logging('best model so far!')
-                    logging('save weights to %s/model.weights' % (backupdir))
-                    model.save_weights('%s/model.weights' % (backupdir))
+                #if (testing_accuracies[-1] > best_acc ):
+                best_acc = testing_accuracies[-1]
+                logging('best model so far!')
+                logging('save weights to %s/model.weights' % (backupdir))
+                model.save_weights('%s/model.weights' % (backupdir))
         shutil.copy2('%s/model.weights' % (backupdir), '%s/model_backup.weights' % (backupdir))

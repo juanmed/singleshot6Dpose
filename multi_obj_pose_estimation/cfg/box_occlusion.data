@@ -1,0 +1,5 @@
+valid  = ../Box_Random/test.txt
+mesh = ../Box_Random/barrel.ply
+backup = backup_multi
+name = barrel
+diam = 0.48

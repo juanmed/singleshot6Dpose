@@ -1,0 +1,12 @@
+train  = ../Box_Random/train.txt
+valid1  = ../Box_Random/test.txt
+backup = backup_multi
+mesh1 = ../Box_Random/barrel.ply
+mesh4 = ../Box_Random/brick.ply
+mesh5 = ../Box_Random/wheel.ply
+mesh6 = ../Box_Random/pallet.ply
+diam1 = 0.48
+diam4 = 0.08
+diam5 = 0.27
+diam6 = 0.50
+num_workers = 0
